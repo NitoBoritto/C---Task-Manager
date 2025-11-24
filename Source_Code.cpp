@@ -4,7 +4,7 @@ Use Comments
 # include<iostream>
 using namespace std;
 
-class Node {
+class Node {	// Double Linked List
 public:
 	int Priority;
 	string Task;
@@ -30,6 +30,7 @@ public:
 	bool Is_Empty() {
 		return Head == NULL;
 	}
+
 	void Insert_At_Begining(string Task_user, int priority_user) {
 		Node* new_Node = new Node(Task_user, priority_user);
 		if (Is_Empty()) {
