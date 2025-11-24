@@ -34,13 +34,15 @@ public:
 	void Insert_At_Begining(string Task_user, int priority_user) {
 		Node* new_Node = new Node(Task_user, priority_user);
 		if (Is_Empty()) {
-			Head = new_Node;
+			Head = Tail = new_Node;
 		}
 		else {
 			new_Node->Next = Head;
+			Head->Previous = new_Node;
 			Head = new_Node;
 		}
 	}
+
 	void Insert_Single_Task(string task, int priority_user) {
 		Node* New_Node = new Node(task, priority_user);
 		if (Is_Empty()) {
@@ -50,27 +52,56 @@ public:
 		else {
 			Node* Temp = Head;
 
-			while (Temp->Next != NULL) {	// To move To the Next Node
+			if (priority_user < Temp->Priority) {
+				Insert_At_Begining(task, priority_user);
+				return;
+			}
 
-				if (New_Node->Priority >= 0) {
+			while (Temp->Next != NULL && Temp->Next->Priority <= priority_user) {
+				Temp = Temp->Next;
+			}
 
-					if (Temp->Priority <= New_Node->Priority) {	//PT<=PN -> Move To Next Node
-						Temp = Temp->Next;
-					}
-					else if (Temp->Priority > New_Node->Priority) {//PT>PN -> Insert At Begining
-
-
-					}
-					else if (New_Node->Priority == 0) {	// PN == 0 -> Insert At Begining 
-						Insert_At_Begining(New_Node->Task, New_Node->Priority);
-					}
+			if (Temp->Next == NULL) {
+				Temp->Next = New_Node;
+				New_Node->Previous = Temp;
+				Tail = New_Node;
+				return;
+			}
+			New_Node->Next = Temp->Next;
+			New_Node->Previous = Temp;
+			Temp->Next->Previous = New_Node;
+			Temp->Next = New_Node;
+		}
+	}
+	void Display() {
+		if (Is_Empty()) {
+			cout << "Your Linked List Is Empty !!\n";
+			return;
+		}
+		else {
+			Node* temp = Head;
+			cout << "{";
+			while (temp != NULL) {
+				if (temp->Next != NULL) {
+					cout << temp->Task << ",";
 				}
-
+				else {
+					cout << temp->Task << "}";
+				}
+				temp = temp->Next;
 			}
 		}
 	}
 };
 int main() {
-
+	
+	Linked_List L;
+	L.Insert_Single_Task("Task(A)", 1);
+	L.Insert_Single_Task("Task(B)", 2);
+	L.Insert_Single_Task("Task(C)", 1);
+	L.Display();
 	return 0;
 }
+
+
+
