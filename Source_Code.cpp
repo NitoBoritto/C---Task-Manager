@@ -121,7 +121,6 @@ int main() {
 	L.Insert_Single_Task("Task(C)", 1);
 	L.Display();
     L.Run_Task();
-	cout << endl;
 	return 0;
 }
 
