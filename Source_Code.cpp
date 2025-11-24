@@ -156,6 +156,7 @@ int main() {
     L.Run_Task();
     L.Run_Task();
     L.Run_Task();
+	cout<<"welcome"<<endl;
 	return 0;
 }
 
