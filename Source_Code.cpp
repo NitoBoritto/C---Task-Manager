@@ -8,13 +8,13 @@ class Node {
 public:
 	int Priority;
 	string Task;
-	Node* Pervious;
+	Node* Previous;
 	Node* Next;
 
 	Node(string Task_user, int Priority_user) {
 		Priority = Priority_user;
 		Task = Task_user;
-		Pervious = Next = NULL;
+		Previous = Next = NULL;
 	}
 };
 
