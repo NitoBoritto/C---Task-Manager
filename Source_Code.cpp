@@ -10,3 +10,6 @@ public:
 int main(void) {
 
 }
+
+
+Fuck you Walid
