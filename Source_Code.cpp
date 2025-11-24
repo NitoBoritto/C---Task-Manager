@@ -1,7 +1,8 @@
 /*
 Use Comments 
 */
-# include<iostream>
+# include <iostream>
+# include <ctime>
 using namespace std;
 
 class Node {	// Double Linked List
@@ -10,11 +11,13 @@ public:
 	string Task;
 	Node* Previous;
 	Node* Next;
+    string Status;
 
 	Node(string Task_user, int Priority_user) {
 		Priority = Priority_user;
 		Task = Task_user;
 		Previous = Next = NULL;
+        Status = "Pending";
 	}
 };
 
@@ -73,6 +76,7 @@ public:
 			Temp->Next = New_Node;
 		}
 	}
+
 	void Display() {
 		if (Is_Empty()) {
 			cout << "Your Linked List Is Empty !!\n";
@@ -90,16 +94,33 @@ public:
 				}
 				temp = temp->Next;
 			}
+            cout << endl;
 		}
-	}
+	} 
+
+    void Run_Task() {
+        if(!Head) return;
+
+        Head->Status = "Running";
+
+        if((rand() % 100) < 20) {
+            cout << "\nTask " << Head->Task << " Failed! ERROR 404 😢" << endl;
+            Head->Status = "Failed;";
+        } else {
+            cout << "\nTask " << Head->Task << " Completed Succesfully 👏" << endl;
+            Head->Status = "Completed";
+        }
+    }
+
 };
 int main() {
-	
+	srand(time(0));
 	Linked_List L;
 	L.Insert_Single_Task("Task(A)", 1);
 	L.Insert_Single_Task("Task(B)", 2);
 	L.Insert_Single_Task("Task(C)", 1);
 	L.Display();
+    L.Run_Task();
 	return 0;
 }
 
