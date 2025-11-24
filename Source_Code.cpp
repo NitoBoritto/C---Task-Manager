@@ -18,7 +18,7 @@ public:
 	}
 };
 
-class Linked_List {
+class Linked_List { // Standard Linked List Initialization
 public:
 	Node* Head;
 	Node* Tail;
@@ -31,7 +31,7 @@ public:
 		return Head == NULL;
 	}
 
-	void Insert_At_Begining(string Task_user, int priority_user) {
+	void Insert_At_Begining(string Task_user, int priority_user) { // Standard Insert @ Ther Beginning
 		Node* new_Node = new Node(Task_user, priority_user);
 		if (Is_Empty()) {
 			Head = Tail = new_Node;
