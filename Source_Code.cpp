@@ -90,8 +90,8 @@ public:
 			while (Temp != NULL) {
 				if (Temp->Next != NULL) cout << "{" << Temp->Task << ", "  // {Task(A), Pending, 0} <-- {Task(B), Pending, 2}
 											<< Temp->Status << ", " 
-											<< Temp->Priority << "} " << "<--";
-				else cout << Temp->Task << ".";
+											<< Temp->Priority << "} " << "<-- ";
+				else cout << Temp->Task << Temp->Status << ", " << Temp->Priority << "} " << ".";
 				Temp = Temp->Next;
 			}
             cout << endl;
@@ -146,6 +146,7 @@ public:
     }
 
 };
+
 int main() {
 	srand(time(0)); // Setting up randomized values for failure simulation
 	Linked_List L;
