@@ -90,7 +90,9 @@ public:
 				if (Temp->Next != NULL) cout << "{" << Temp->Task << ", "  // {Task(A), Pending, 0} <-- {Task(B), Pending, 2}
 											<< Temp->Status << ", " 
 											<< Temp->Priority << "} " << "<-- ";
-				else cout << Temp->Task << Temp->Status << ", " << Temp->Priority << "} " << ".";
+				else cout << "{" << Temp->Task << ", "
+											<< Temp->Status << ", " 
+											<< Temp->Priority << "} " << ".";
 				Temp = Temp->Next;
 			}
             cout << endl;
