@@ -140,8 +140,10 @@ public:
         }
 
         Log_Task(Head);
+		cout << "Saved to log ✅" << endl;
 
         Remove_Task();
+		cout << "Task removed from queue! ✅" << endl;
     }
 
 	// GUI Starts from here
