@@ -145,18 +145,18 @@ public:
         Remove_Task();
     }
 
+	// GUI Starts from here
+
 };
 
 int main() {
 	srand(time(0)); // Setting up randomized values for failure simulation
 	Linked_List L;
-	L.Insert_Single_Task("Task(A)", 1);
-	L.Insert_Single_Task("Task(B)", 2);
-	L.Insert_Single_Task("Task(C)", 1);
-	L.Display();
-    L.Run_Task();
-    L.Run_Task();
-    L.Run_Task();
+
+
+	// GUI Starts from here either
+
+	
 	return 0;
 }
 
