@@ -92,7 +92,7 @@ public:
 											<< Temp->Priority << "} " << "<-- ";
 				else cout << "{" << Temp->Task << ", "
 											<< Temp->Status << ", " 
-											<< Temp->Priority << "} " << ".";
+											<< Temp->Priority << "}" << ".";
 				Temp = Temp->Next;
 			}
             cout << endl;
