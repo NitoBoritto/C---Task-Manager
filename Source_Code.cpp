@@ -39,10 +39,10 @@ public:
 
 	void Insert_At_Begining(string Task_user, int Priority_user) { // Standard Insert @ The Beginning
 		Node* new_Node = new Node(Task_user, Priority_user);
+
 		if (Is_Empty()) {
 			Head = Tail = new_Node;
-		}
-		else {
+		} else {
 			new_Node->Next = Head;
 			Head->Previous = new_Node; // Due to being a doubly linked list. Next connects to the node after, Previous connects to the node before
 			Head = new_Node;
@@ -51,11 +51,11 @@ public:
 
 	void Insert_Single_Task(string Task, int Priority_user) { // Inserting a task node & automatically sorting depending on the priority number from 0 - 5
 		Node* New_Node = new Node(Task, Priority_user);
+
 		if (Is_Empty()) {
 			Head = Tail = New_Node;
 			return;
-		}
-		else {
+		} else {
 			Node* Temp = Head;
 
 			if (Priority_user < Temp->Priority) { // Inserting task node at the beginning if it has the highest priority
@@ -84,8 +84,7 @@ public:
 		if (Is_Empty()) {
 			cout << "Your Linked List Is Empty !!\n";
 			return;
-		}
-		else {
+		} else {
 			Node* Temp = Head;
 			while (Temp != NULL) {
 				if (Temp->Next != NULL) cout << "{" << Temp->Task << ", "  // {Task(A), Pending, 0} <-- {Task(B), Pending, 2}
@@ -147,9 +146,11 @@ public:
 
 	// GUI Starts from here
 
+
+
 };
 
-int main() {
+int main(void) {
 	srand(time(0)); // Setting up randomized values for failure simulation
 	Linked_List L;
 
@@ -159,7 +160,9 @@ int main() {
 	
 
 	// Main integreation starts here
-	return 0;
+
+	
+
 }
 
 
