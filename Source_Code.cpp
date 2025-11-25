@@ -140,7 +140,7 @@ public:
         }
 
         Log_Task(Head);
-		cout << "Saved to log ✅" << endl;
+		cout << "Saved to log! ✅" << endl;
 
         Remove_Task();
 		cout << "Task removed from queue! ✅" << endl;
@@ -152,7 +152,7 @@ public:
 
 };
 
-int main(void) {
+int main() {
 	srand(time(0)); // Setting up randomized values for failure simulation
 	Linked_List L;
 
@@ -164,7 +164,7 @@ int main(void) {
 	// Main integreation starts here
 
 	
-
+	return 0;
 }
 
 
