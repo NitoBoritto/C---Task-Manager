@@ -1,11 +1,13 @@
 /*
-Use Comments 
+Use Comments
 */
 # include <iostream>
 # include <ctime>
 # include <thread>
 # include <chrono>
 # include <fstream>
+# include <limits>
+# include <string>
 using namespace std;
 
 class Node {	// Double Linked List
@@ -14,13 +16,13 @@ public:
 	string Task;
 	Node* Previous;
 	Node* Next;
-    string Status; // Pending, Running, Completed, Failed
+	string Status; // Pending, Running, Completed, Failed
 
 	Node(string Task_user, int Priority_user) {
 		Priority = Priority_user;
 		Task = Task_user;
 		Previous = Next = NULL;
-        Status = "Pending";
+		Status = "Pending";
 	}
 };
 
@@ -42,7 +44,8 @@ public:
 
 		if (Is_Empty()) {
 			Head = Tail = new_Node;
-		} else {
+		}
+		else {
 			new_Node->Next = Head;
 			Head->Previous = new_Node; // Due to being a doubly linked list. Next connects to the node after, Previous connects to the node before
 			Head = new_Node;
@@ -55,7 +58,8 @@ public:
 		if (Is_Empty()) {
 			Head = Tail = New_Node;
 			return;
-		} else {
+		}
+		else {
 			Node* Temp = Head;
 
 			if (Priority_user < Temp->Priority) { // Inserting task node at the beginning if it has the highest priority
@@ -84,22 +88,23 @@ public:
 		if (Is_Empty()) {
 			cout << "Your Linked List Is Empty !!\n";
 			return;
-		} else {
+		}
+		else {
 			Node* Temp = Head;
 			while (Temp != NULL) {
 				if (Temp->Next != NULL) cout << "{" << Temp->Task << ", "  // {Task(A), Pending, 0} <-- {Task(B), Pending, 2}
-											<< Temp->Status << ", " 
-											<< Temp->Priority << "} " << "<-- ";
+					<< Temp->Status << ", "
+					<< Temp->Priority << "} " << "<-- ";
 				else cout << "{" << Temp->Task << ", "
-											<< Temp->Status << ", " 
-											<< Temp->Priority << "}" << ".";
+					<< Temp->Status << ", "
+					<< Temp->Priority << "}" << ".";
 				Temp = Temp->Next;
 			}
-            cout << endl;
+			cout << endl;
 		}
-	} 
+	}
 
-    void Log_Task(Node* Task) { // Logging executed tasks
+	void Log_Task(Node* Task) { // Logging executed tasks
 		const string Path = "C:\\Users\\medo7\\OneDrive - Egyptian Russian University\\Planning For Future DA\\Projects\\C++ Task Manager\\Log.csv";
 
 		ifstream check(Path);
@@ -108,45 +113,46 @@ public:
 
 		ofstream file(Path, ios::app);
 
-		if(Write_Header) file << "Task,Priority,Status" << endl;
+		if (Write_Header) file << "Task,Priority,Status" << endl;
 
-        file << Task->Task << "," 
-				<< Task->Priority << "," 
-				<< Task->Status << endl;
+		file << Task->Task << ","
+			<< Task->Priority << ","
+			<< Task->Status << endl;
 
-        file.close();
-    }
+		file.close();
+	}
 
-    void Remove_Task() { // Deleting tasks after executing & logging them
-        Node* Temp = Head;
-        Head = Head->Next;
-        delete Temp;
-    }
+	void Remove_Task() { // Deleting tasks after executing & logging them
+		Node* Temp = Head;
+		Head = Head->Next;
+		delete Temp;
+	}
 
-    void Run_Task() { // Executing tasks
-        if(Is_Empty()) {
-            cout << "Task Manager is empty.\nPlease add tasks before running tasks manager!" << endl;
-            return;
-        };
+	void Run_Task() { // Executing tasks
+		if (Is_Empty()) {
+			cout << "Task Manager is empty.\nPlease add tasks before running tasks manager!" << endl;
+			return;
+		};
 
-        Head->Status = "Running";
-        cout << "\n" << Head->Status << "...." << endl;
-        this_thread::sleep_for(3s); // 3 second wait-time for task execution
+		Head->Status = "Running";
+		cout << "\n" << Head->Status << "...." << endl;
+		this_thread::sleep_for(3s); // 3 second wait-time for task execution
 
-        if((rand() % 100) < 20) { // Initalizing randomized values for 20% task failure
-            cout << "Task " << Head->Task << " Failed! ERROR 404 😢" << endl;
-            Head->Status = "Failed";
-        } else {
-            cout << "Task " << Head->Task << " Completed Succesfully! 👏" << endl;
-            Head->Status = "Completed";
-        }
+		if ((rand() % 100) < 20) { // Initalizing randomized values for 20% task failure
+			cout << "Task " << Head->Task << " Failed! ERROR 404 😢" << endl;
+			Head->Status = "Failed";
+		}
+		else {
+			cout << "Task " << Head->Task << " Completed Succesfully! 👏" << endl;
+			Head->Status = "Completed";
+		}
 
-        Log_Task(Head);
+		Log_Task(Head);
 		cout << "Saved to log! ✅" << endl;
 
-        Remove_Task();
+		Remove_Task();
 		cout << "Task removed from queue! ✅" << endl;
-    }
+	}
 
 	// GUI Starts from here
 
@@ -161,13 +167,77 @@ int main() {
 
 	// GUI Starts from here either
 
-	
+
 
 	// Main integreation starts here
+	int choice;
+	string task;
+	int priority;
 
-	
+	cout << "+-------------------------------------------+\n";
+	cout << "|       Welcome to Task Manager Pro!        |\n";
+	cout << "| Simple system to track & run your tasks.  |\n";
+	cout << "+-------------------------------------------+\n\n";
+
+	while (true) {
+		cout << "\n============== MAIN MENU ==============\n";
+		cout << "1. Add New Task\n";
+		cout << "2. Display Task Queue\n";
+		cout << "3. Run Next Task\n";
+		cout << "4. Open file log\n";
+		cout << "5. Exit Program\n";
+		cout << "=======================================\n";
+		cout << "Enter your choice: ";
+		cin >> choice;
+
+		if (!cin.good()) {
+			cin.clear();
+			cin.ignore(1000, '\n');
+			cout << "Invalid input! Enter numbers only.\n";
+			continue;
+		}
+
+		switch (choice) {
+
+		case 1:
+			cout << "\nEnter task name (one sentence): ";
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			getline(cin, task);
+
+			cout << "Enter priority (0 = highest -> 5 = lowest): ";
+			cin >> priority;
+
+			if (priority < 0 || priority > 5) {
+				cout << "Invalid priority!\n";
+				break;
+			}
+
+			L.Insert_Single_Task(task, priority);
+			cout << "Task added successfully! \n";
+			break;
+
+		case 2:
+			cout << "\nCurrent Task Queue:\n";
+			L.Display();
+			break;
+
+		case 3:
+			cout << "\nExecuting next task...\n";
+			L.Run_Task();
+			break;
+
+		case 4:
+			system("start \"\" \"C:\\Users\\medo7\\OneDrive - Egyptian Russian University\\Planning For Future DA\\Projects\\C++ Task Manager\\Log.csv\"");
+			break;
+
+		case 5:
+			cout << "\nGoodbye! \n";
+			return 0;
+
+		default:
+			cout << "Invalid choice! Please select 1 – 4.\n";
+		}
+	}
+
 	return 0;
 }
-
-
-
