@@ -235,7 +235,7 @@ int main() {
 			return 0;
 
 		default:
-			cout << "Invalid choice! Please select 1 – 4.\n";
+			cout << "Invalid choice! Please select 1 - 4.\n";
 		}
 	}
 
