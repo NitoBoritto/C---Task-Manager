@@ -93,11 +93,11 @@ public:
 		else {
 			Node* Temp = Head;
 			while (Temp != NULL) {
-				if (Temp->Next != NULL) cout << "{" << Temp->Task << ", "  // {Task(A), Pending, 0} <-- {Task(B), Pending, 2}
-					<< Temp->Status << ", "
-					<< Temp->Priority << "} " << "<-- ";
-				else cout << "{" << Temp->Task << ", "
-					<< Temp->Status << ", "
+				if (Temp->Next != NULL) cout << "{" << Temp->Task << " | "  // {Task(A) | Pending | 0} <-- {Task(B) | Pending | 2}
+					<< Temp->Status << " | "
+					<< Temp->Priority << "}" << " <-- ";
+				else cout << "{" << Temp->Task << " | "
+					<< Temp->Status << " | "
 					<< Temp->Priority << "}" << ".";
 				Temp = Temp->Next;
 			}
@@ -129,7 +129,7 @@ public:
 		delete Temp;
 	}
 
-	void Run_Task() { // Executing tasks (interactive mode output)
+	void Run_Task() { // Executing tasks
 		if (Is_Empty()) {
 			cout << "Task Manager is empty.\nPlease add tasks before running tasks manager!" << endl;
 			return;
@@ -137,7 +137,7 @@ public:
 
 		Head->Status = "Running";
 		cout << "\n" << Head->Status << "...." << endl;
-		std::this_thread::sleep_for(std::chrono::seconds(3)); // 3 second wait-time for task execution
+		this_thread::sleep_for(3s); // 3 second wait-time for task execution
 
 		if ((rand() % 100) < 20) { // Initalizing randomized values for 20% task failure
 			cout << "Task " << Head->Task << " Failed! ERROR 404 😢" << endl;
@@ -159,52 +159,24 @@ public:
 
 
 
-	// Minimal API helpers for quiet output
-	void Run_Task_API() {
-		if (Is_Empty()) { cout << "EMPTY" << endl; return; }
-		Head->Status = "Running";
-		cout << "Running...." << endl;
-		std::this_thread::sleep_for(std::chrono::seconds(3));
-		if ((rand() % 100) < 20) {
-			Head->Status = "Failed";
-			cout << "Task Failed!" << endl;
-		} else {
-			Head->Status = "Completed";
-			cout << "Task Completed Succesfully!" << endl;
-		}
-		Log_Task(Head);
-		Remove_Task();
-	}
-
-	void Display_API() {
-		if (Is_Empty()) { cout << "EMPTY" << endl; return; }
-		Node* Temp = Head;
-			while (Temp != NULL) {
-				if (Temp->Next != NULL) cout << "{" << Temp->Task << " | "  // {Task(A) | Pending | 0} <-- {Task(B) | Pending | 2}
-					<< Temp->Status << " | "
-					<< Temp->Priority << "}" << " <-- ";
-				else cout << "{" << Temp->Task << " | "
-					<< Temp->Status << " | "
-					<< Temp->Priority << "}" << ".";
-				Temp = Temp->Next;
-			}
-			cout << endl;
-	}
-
-	// Append loaded task preserving file order
-	void Append_Loaded_Task(const string& task, int priority, const string& status){
-		Node* n = new Node(task, priority);
-		n->Status = status;
-		if(Is_Empty()) { Head = Tail = n; }
-		else { Tail->Next = n; n->Previous = Tail; Tail = n; }
-	}
 };
 
-// Persistent state I/O (same directory as Log.csv for consistency)
-static const string STATE_PATH = "C:\\Users\\medo7\\OneDrive - Egyptian Russian University\\Planning For Future DA\\Projects\\C++ Task Manager\\TasksState.csv";
+// Append loaded task preserving file order
+void Append_Loaded_Task(Linked_List& L, const string& task, int priority, const string& status){
+	Node* n = new Node(task, priority);
+	n->Status = status;
+	if(L.Is_Empty()) { 
+		L.Head = L.Tail = n; 
+	} else { 
+		L.Tail->Next = n; n->Previous = L.Tail; L.Tail = n; 
+	}
+}
 
-static void SaveState(Linked_List& L){
-	ofstream f(STATE_PATH, ios::trunc);
+// Persistent state I/O (use same absolute path as other program)
+static const string State_Path = "C:\\Users\\medo7\\OneDrive - Egyptian Russian University\\Planning For Future DA\\Projects\\C++ Task Manager\\TasksState.csv";
+
+void SaveState(Linked_List& L){
+	ofstream f(State_Path, ios::trunc);
 	if(!f.is_open()) return;
 	f << "Task,Priority,Status\n";
 	Node* t = L.Head;
@@ -216,77 +188,39 @@ static void SaveState(Linked_List& L){
 }
 
 static void LoadState(Linked_List& L){
-	ifstream f(STATE_PATH);
+	ifstream f(State_Path);
 	if(!f.is_open()) return; // no state yet
 	string line;
 	// optional header
-	if(std::getline(f, line)){
+	if(getline(f, line)){
 		if(line.rfind("Task,Priority,Status", 0) != 0){
-			// first line is data; parse it as well below
 			stringstream ss(line);
 			string task, prio, status;
-			if(std::getline(ss, task, ',') && std::getline(ss, prio, ',') && std::getline(ss, status)){
+			if(getline(ss, task, ',') && getline(ss, prio, ',') && getline(ss, status)){
 				int p = 0; try{ p = stoi(prio);}catch(...){ p = 0; }
-				L.Append_Loaded_Task(task, p, status);
+				Append_Loaded_Task(L, task, p, status);
 			}
 		}
 	}
-	while(std::getline(f, line)){
+	while(getline(f, line)){
 		stringstream ss(line);
 		string task, prio, status;
-		if(std::getline(ss, task, ',') && std::getline(ss, prio, ',') && std::getline(ss, status)){
+		if(getline(ss, task, ',') && getline(ss, prio, ',') && getline(ss, status)){
 			int p = 0; try{ p = stoi(prio);}catch(...){ p = 0; }
-			L.Append_Loaded_Task(task, p, status);
+			Append_Loaded_Task(L, task, p, status);
 		}
 	}
 	f.close();
 }
 
-// API mode: single command; quiet output tailored for GUI bridge
-static int APIMode(){
-	ios::sync_with_stdio(true);
-	cin.tie(nullptr);
-	srand((unsigned)time(0));
-	Linked_List L;
-	LoadState(L);
-	string cmd;
-	if(!std::getline(cin, cmd)) { cout << "ERROR:NoCommand" << endl; return 1; }
-	if(cmd == "ADD"){
-		string task; string prioStr; if(!std::getline(cin, task)) task=""; if(!std::getline(cin, prioStr)) prioStr="0"; 
-		int p=0; try{ p=stoi(prioStr);}catch(...){ p=0; }
-		if(p<0) p=0; if(p>5) p=5;
-		if(task.empty()){ cout << "ERROR:EmptyTask" << endl; return 1; }
-		L.Insert_Single_Task(task, p);
-		SaveState(L);
-		cout << "Task Added Succesfully!" << endl; return 0;
-	}
-	if(cmd == "DISPLAY"){
-		L.Display_API(); return 0;
-	}
-	if(cmd == "RUN"){
-		L.Run_Task_API();
-		SaveState(L);
-		return 0;
-	}
-	if(cmd == "OPENLOG"){
-		system("start \"\" \"C:\\Users\\medo7\\OneDrive - Egyptian Russian University\\Planning For Future DA\\Projects\\C++ Task Manager\\Log.csv\"");
-		cout << "Opened Log.csv" << endl; return 0;
-	}
-	cout << "ERROR:UnknownCommand" << endl; return 1;
-}
-
-int main(int argc, char** argv) {
-	if(argc > 1 && std::string(argv[1]) == "--api"){
-		return APIMode();
-	}
-    
+int main() {
 	srand(time(0)); // Setting up randomized values for failure simulation
 	Linked_List L;
 
-	// Load existing persisted tasks so interactive mode sees current queue
+	// Load existing persisted tasks so terminal-only program sees current queue
 	LoadState(L);
 
-	// main() integreation starts here
+	// Main integreation starts here
 	int choice;
 	string task;
 	int priority;
